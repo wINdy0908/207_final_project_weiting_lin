@@ -672,6 +672,10 @@ Therefore, if a similar experiment investigating the relationship between visual
 
 <https://github.com/wINdy0908/207_final_project_weiting_lin/blob/main/final_project_code.R>
 
+**Github**
+
+<https://github.com/wINdy0908/207_final_project_weiting_lin.git>
+
 ```{r eval=FALSE, include=FALSE}
 data_list=list()
 for( i in 1:5){
