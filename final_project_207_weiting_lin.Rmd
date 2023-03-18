@@ -678,6 +678,8 @@ Hence, we think that if we have to do the similar experiment, relation between v
 
 ### **Code**
 
+<https://github.com/wINdy0908/207_final_project_weiting_lin/blob/main/final_project_code.R>
+
 ```{r eval=FALSE, include=FALSE}
 data_list=list()
 for( i in 1:5){

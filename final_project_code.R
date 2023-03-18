@@ -1,4 +1,3 @@
-{r eval=FALSE, include=FALSE}
 data_list=list()
 for( i in 1:5){
   file_name=paste0("session",i,".rds")
