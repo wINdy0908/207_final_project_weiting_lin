@@ -128,13 +128,36 @@ plotmeans(avg_firing_rate~contrast_left,data=new_data,xlab = "left contrast leve
 plotmeans(avg_firing_rate~contrast_right,data=new_data,xlab="right contrast levels",ylab="mean firing rate",main="figure 2: Main effect from right contrast stimulus",cex.main=0.8)
 
 ##
-par(mfrow=c(1,2))
-for(i in 1:5){
-  name=paste0("session ",i)
-  plotmeans(avg_firing_rate~contrast_left,data=new_data[new_data$session==name,],xlab = "left contrast levels",ylab="mean firing rate",main=paste0("figure ",i+2,": Main effect of left contrast stimulus"),cex.main=0.8)
-  plotmeans(avg_firing_rate~contrast_right,data=new_data[new_data$session==name,],xlab="right contrast levels",ylab="mean firing rate",main=paste0("figure ",i+3,": Main effect of right contrast stimulus"),cex.main=0.8)
-  mtext(paste0("session",i),side = 3,line = -0.79,cex=1,outer = TRUE)
+mean_left=c()
+for(j in c("session 1","session 2","session 3","session 4","session 5")){
+  for(i in c(0,0.25,0.5,1)){
+    mean_left=append(mean_left,mean(new_data[new_data$contrast_left==i & new_data$session==j,4]))
+  }
 }
+
+mean_right=c()
+for(j in c("session 1","session 2","session 3","session 4","session 5")){
+  for(i in c(0,0.25,0.5,1)){
+    mean_right=append(mean_right,mean(new_data[new_data$contrast_right==i & new_data$session==j,4]))
+  }
+}
+
+
+new_mean_left=data.frame(session=c(rep("session 1",4),rep("session 2",4),rep("session 3",4),rep("session 4",4),rep("session 5",4)),level=rep(c(0,0.25,0.5,1),5),mean_firing_rate=mean_left)
+
+new_mean_right=data.frame(session=c(rep("session 1",4),rep("session 2",4),rep("session 3",4),rep("session 4",4),rep("session 5",4)),level=rep(c(0,0.25,0.5,1),5),mean_firing_rate=mean_right)
+
+ggplot(new_mean_left, aes(x=as.factor(level), y=mean_firing_rate, group=session)) +
+  geom_line(aes(color=session))+
+  geom_point()+
+  labs(title="Figure 3: mean firing rate of contrast level of left stimulus among five session")+
+  theme(plot.title = element_text(size=10))
+
+
+ggplot(new_mean_right, aes(x=as.factor(level), y=mean_firing_rate, group=session)) +
+  geom_line(aes(color=session))+
+  geom_point()+
+  labs(title="Figure 4: mean firing rate of contrast level of right stimulus among five session")+theme(plot.title = element_text(size=10))
 
 ##
 interaction.plot(new_data$contrast_left,new_data$contrast_right,new_data$avg_firing_rate,ylab="mean firing rate",xlab="left contrast levels",trace.label = "right contrast levels",col=c("orange","green","red","blue"),main="figure 9: interaction effect between right contrast levels and left contrast levels",cex.main=0.8)

@@ -252,34 +252,56 @@ grid.arrange(plot1, plot2,plot3,plot4,plot5,ncol=2)
 
 We are curious about that if the same levels of contrast of two sides, left and right, have the same effect on mean firing rate of mice; therefore, we take the mean plots of two sides contrast levels over 5 sessions to discover the influence on mean firing rate.
 
-From the figure 1, we could observe contrast of left stimulus has the highest mean firing rate when contrast level at 0.05 rather than level at 1, and has the lowest mean firing rate when contrast level at 0.25.
+From the Figure 1, we could observe contrast of left stimulus has the highest mean firing rate when contrast level at 0.05 rather than level at 1, and has the lowest mean firing rate when contrast level at 0.25.
 
-From the figure 2, the mean firing rate from contrast of right stimulus would have the lowest value when contrast level at 0.25, and have the highest value when contrast level at 1.
+From the Figure 2, the mean firing rate from contrast of right stimulus would have the lowest value when contrast level at 0.25, and have the highest value when contrast level at 1.
 
 Despite the fact that both sides have the lowest mean firing rate value at level 0.25, the stimuli from both sides still have the different mean firing rate at the same contrast levels.
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE,fig.align="center"}
 library(gplots)
 par(mfrow=c(1,2))
-plotmeans(avg_firing_rate~contrast_left,data=new_data,xlab = "left contrast levels",ylab="mean firing rate",main="figure 1: Main effect from left contrast stimulus",cex.main=0.8)
-plotmeans(avg_firing_rate~contrast_right,data=new_data,xlab="right contrast levels",ylab="mean firing rate",main="figure 2: Main effect from right contrast stimulus",cex.main=0.8)
+plotmeans(avg_firing_rate~contrast_left,data=new_data,xlab = "left contrast levels",ylab="mean firing rate",main="Figure 1: Main effect from left contrast stimulus",cex.main=0.8)
+plotmeans(avg_firing_rate~contrast_right,data=new_data,xlab="right contrast levels",ylab="mean firing rate",main="Figure 2: Main effect from right contrast stimulus",cex.main=0.8)
 ```
 
 After taking a look at mean plots of two sides contrast levels over five sessions, we are interested in if the main effect of two sides contrast levels has the similar corresponding mean firing rate in each sessions.
 
-From the plots below (figure 3 to figure 8), we find that the highest mean firing rate occurs when contrast level of right stimulus at 1 excluding session 1. However, the highest mean firing rate in response to left stimulus is either at contrast level 0.25 or at contrast level 0.5 in each session.
+From the plots below (Figure 3 to Figure 4), we can see that the highest mean firing rate occurs when the contrast level of the right stimulus is at 1, excluding session 1. Additionally, the mean firing rate does not seem to have exaggerated fluctuations over the five levels of left stimuli in each session, except for session 1.
 
-In general, the diverse effects on mean firing rate are shared by the main effects of the two stimuli presented on each side during the session.
+In general, we could learn that the values of mean firing rate in each session are different. From figure 3, it is obvious that the mean firing rate will decrease with the trials increase on the mouse.
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE,fig.align="center"}
-par(mfrow=c(1,2))
-for(i in 1:5){
-  name=paste0("session ",i)
-plotmeans(avg_firing_rate~contrast_left,data=new_data[new_data$session==name,],xlab = "left contrast levels",ylab="mean firing rate",main=paste0("figure ",i+2,": Main effect of left contrast stimulus"),cex.main=0.8)
-plotmeans(avg_firing_rate~contrast_right,data=new_data[new_data$session==name,],xlab="right contrast levels",ylab="mean firing rate",main=paste0("figure ",i+3,": Main effect of right contrast stimulus"),cex.main=0.8)
-mtext(paste0("session",i),side = 3,line = -0.79,cex=1,outer = TRUE)
-      
+mean_left=c()
+for(j in c("session 1","session 2","session 3","session 4","session 5")){
+  for(i in c(0,0.25,0.5,1)){
+    mean_left=append(mean_left,mean(new_data[new_data$contrast_left==i & new_data$session==j,4]))
+  }
 }
+
+mean_right=c()
+for(j in c("session 1","session 2","session 3","session 4","session 5")){
+  for(i in c(0,0.25,0.5,1)){
+    mean_right=append(mean_right,mean(new_data[new_data$contrast_right==i & new_data$session==j,4]))
+  }
+}
+
+
+new_mean_left=data.frame(session=c(rep("session 1",4),rep("session 2",4),rep("session 3",4),rep("session 4",4),rep("session 5",4)),level=rep(c(0,0.25,0.5,1),5),mean_firing_rate=mean_left)
+
+new_mean_right=data.frame(session=c(rep("session 1",4),rep("session 2",4),rep("session 3",4),rep("session 4",4),rep("session 5",4)),level=rep(c(0,0.25,0.5,1),5),mean_firing_rate=mean_right)
+
+ggplot(new_mean_left, aes(x=as.factor(level), y=mean_firing_rate, group=session)) +
+  geom_line(aes(color=session))+
+  geom_point()+
+  labs(title="Figure 3: mean firing rate of contrast level of left stimulus among five session")+
+  theme(plot.title = element_text(size=10))
+
+
+ggplot(new_mean_right, aes(x=as.factor(level), y=mean_firing_rate, group=session)) +
+  geom_line(aes(color=session))+
+  geom_point()+
+  labs(title="Figure 4: mean firing rate of contrast level of right stimulus among five session")+theme(plot.title = element_text(size=10))
 
 ```
 
@@ -287,13 +309,13 @@ mtext(paste0("session",i),side = 3,line = -0.79,cex=1,outer = TRUE)
 
 Due to the reason that mouse got the two sides stimuli at the same time, we consider that the interaction effect between right side contrast levels (contrast_right) and left side contrast levels (contrast_left) may affect the mean firing rate. Hence, we do interaction plot to see if the interaction effect exists.
 
-From the figure 3, we could learn that there exists the interaction effect between left side contrast levels and right side contrast levels. Because the lines in the figure 3, combinations of left side contrast levels and right side contrast levels, cross.
+From the Figure 5, we could learn that there exists the interaction effect between left side contrast levels and right side contrast levels. Because the lines in the figure 5, combinations of left side contrast levels and right side contrast levels, cross.
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE,fig.align="center"}
-interaction.plot(new_data$contrast_left,new_data$contrast_right,new_data$avg_firing_rate,ylab="mean firing rate",xlab="left contrast levels",trace.label = "right contrast levels",col=c("orange","green","red","blue"),main="figure 9: interaction effect between right contrast levels and left contrast levels",cex.main=0.8)
+interaction.plot(new_data$contrast_left,new_data$contrast_right,new_data$avg_firing_rate,ylab="mean firing rate",xlab="left contrast levels",trace.label = "right contrast levels",col=c("orange","green","red","blue"),main="Figure 5: interaction effect between right contrast levels and left contrast levels",cex.main=0.8)
 ```
 
-We would like to determine whether there is an interaction effect between the contrast levels of the two sides in any session. Figures 10 to 14 show that the four lines in each plot intersect, indicating that each session has an interaction effect that may affect the mean firing rate.
+We would like to determine whether there is an interaction effect between the contrast levels of the two sides in any session. Figures 6 to 10 show that the four lines in each plot intersect, indicating that each session has an interaction effect that may affect the mean firing rate.
 
 Based on the results, we will test whether the interaction effect is significant in the interpretation of the mean firing rate in the following inferential analysis.
 
@@ -302,7 +324,7 @@ par(mfrow=c(2,1))
 #par(mar = c(1, 1, 1, 1))
 for(i in 1:5){
   name=paste0("session ",i)
-  interaction.plot(new_data[new_data$session==name,]$contrast_left,new_data[new_data$session==name,]$contrast_right,new_data[new_data$session==name,]$avg_firing_rate,ylab="mean firing rate",xlab="left contrast levels",trace.label = "right contrast levels",col=c("orange","green","red","blue"),main=paste0("figure ",i+9,": interaction effect of session",i,": right contrast levels and left contrast levels"),cex.main=0.8)
+  interaction.plot(new_data[new_data$session==name,]$contrast_left,new_data[new_data$session==name,]$contrast_right,new_data[new_data$session==name,]$avg_firing_rate,ylab="mean firing rate",xlab="left contrast levels",trace.label = "right contrast levels",col=c("orange","green","red","blue"),main=paste0("Figure ",i+5,": interaction effect of session",i,": right contrast levels and left contrast levels"),cex.main=0.8)
 }
 
 ```
@@ -550,13 +572,13 @@ pander(data.frame(Sensitivity=paste0(round(12*100/(12+62),2),"%"),Specificity=pa
 
 #### Assumption: Normality
 
-In Figure 15, the QQ-plot shows that there is a heavy tail and some outliers, which are labeled with their corresponding session. Overall, it is still obvious that the distribution of the data follows the diagonal line. Hence, we can conclude that the data is normally distributed.
+In Figure 11, the QQ-plot shows that there is a heavy tail and some outliers, which are labeled with their corresponding session. Overall, it is still obvious that the distribution of the data follows the diagonal line. Hence, we can conclude that the data is normally distributed.
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE,fig.align="center"}
 #install.packages("lattice")
 library(lattice)
 #qqnorm(resid(fit.full))
-qqmath(fit.full, id=0.05, main="figur 15: QQ-plot")#id:outlier
+qqmath(fit.full, id=0.05, main="Figur 11: QQ-plot")#id:outlier
 ```
 
 #### Outliers proportion
@@ -568,7 +590,7 @@ cooksD <- cooks.distance(fit.full)
 influential <- cooksD[(cooksD > (3 * mean(cooksD, na.rm = TRUE)))]
 #influential
 infp<-which(cooksD > (3 * mean(cooksD, na.rm = TRUE)))
-plot(cooksD)
+plot(cooksD,main="Figur 12: outlier and all data points")
 points(infp,cooksD[infp],pch=17,col="red",cex=1.1)
 proportion_out=length(infp)/length(cooksD)
 #proportion_out
@@ -576,10 +598,10 @@ proportion_out=length(infp)/length(cooksD)
 
 #### Assumption: **Homogeneity of Variance**
 
-We would like to determine whether the mixed model follows homogeneity of variance. The plot below (Figure 16) shows that the residuals are not symmetric with respect to the line y=0. Therefore, we conclude that the model violates the assumption of homogeneity of variance.
+We would like to determine whether the mixed model follows homogeneity of variance. The plot below (Figure 13) shows that the residuals are not symmetric with respect to the line y=0. Therefore, we conclude that the model violates the assumption of homogeneity of variance.
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE,fig.align="center"}
-plot(fit.full,main="figure 16: fitted value versus residual",xlab="fitted value",ylab = "residual")
+plot(fit.full,main="Figure 13: fitted value versus residual",xlab="fitted value",ylab = "residual")
 
 ```
 
@@ -589,7 +611,7 @@ We also examined the residual versus fitted plot in each session and found that 
 #install.packages("lme4")
 library(lme4)
 new_data$res<-residuals(fit.full)
-plot(fit.full, resid(.) ~ fitted(.) | session )
+plot(fit.full, resid(.) ~ fitted(.) | session, main="Figur 14: residuals among five sessions")
 
 ```
 
@@ -603,7 +625,7 @@ The purpose of this section is to ensure that the model does not have any potent
 model<-glm(feedback~contrast_left+contrast_right+avg_firing_rate+contrast_left*contrast_right,family=binomial,data=train)
 res.P = residuals(model, type = "pearson")
 res.D = residuals(model, type = "deviance")
-boxplot(cbind(res.P, res.D), names = c("Pearson", "Deviance"))
+boxplot(cbind(res.P, res.D), names = c("Pearson", "Deviance"),main="Figur 15: distribution- Pearson residuals vs. deviance residuals",cex.main=0.8)
 ```
 
 #### Residuals plots
@@ -612,10 +634,10 @@ The purpose is to ensure that there are no systematic patterns in the residuals.
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE,fig.align="center"}
 par(mfrow=c(1,2))
-plot(model$fitted.values, res.P, pch=16, cex=0.6, ylab='Pearson Residuals', xlab='Fitted Values')
+plot(model$fitted.values, res.P, pch=16, cex=0.6, ylab='Pearson Residuals', xlab='Fitted Values',main="Figur 16: Pearson residuals",cex.main=0.8)
 lines(smooth.spline(model$fitted.values, res.P, spar=0.9), col=2)
 abline(h=0, lty=2, col='grey')
-plot(model$fitted.values, res.D, pch=16, cex=0.6, ylab='Deviance Residuals', xlab='Fitted Values')
+plot(model$fitted.values, res.D, pch=16, cex=0.6, ylab='Deviance Residuals', xlab='Fitted Values',main="Figur 17: Deviance residuals",cex.main=0.8)
 lines(smooth.spline(model$fitted.values, res.D, spar=0.9), col=2)
 abline(h=0, lty=2, col='grey')
 ```
@@ -627,7 +649,7 @@ We use it to find the influential points in data, and find that the influential 
 ```{r echo=FALSE, message=FALSE, warning=FALSE,fig.align="center"}
 par(mfrow=c(1,1))
 leverage = hatvalues(model)
-plot(names(leverage), leverage, xlab="Index", type="h")
+plot(names(leverage), leverage, xlab="Index", type="h",main="Figure 18: influential points")
 points(names(leverage), leverage, pch=16, cex=0.6)
 p = length(coef(model))
 n = nrow(new_data)
