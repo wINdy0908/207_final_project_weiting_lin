@@ -1,5 +1,5 @@
 ---
-title: "final project"
+title: "Stimuli and Mouse Neuron Spikes: Mixed effect Models"
 author: "WEITING LIN"
 date: "`r Sys.Date()`"
 output:
@@ -572,7 +572,7 @@ pander(data.frame(Sensitivity=paste0(round(12*100/(12+62),2),"%"),Specificity=pa
 
 #### Assumption: Normality
 
-In Figure 11, the QQ-plot shows that there is a heavy tail and some outliers, which are labeled with their corresponding session. Overall, it is still obvious that the distribution of the data follows the diagonal line. Hence, we can conclude that the data is normally distributed.
+In Figure 11, the QQ-plot shows that there is a heavy tail and some outliers, which are labeled with their corresponding session. Overall, it is still obvious that the distribution of the residuals follows the diagonal line. Hence, we can conclude that the residuals are normally distributed.
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE,fig.align="center"}
 #install.packages("lattice")
@@ -630,7 +630,7 @@ boxplot(cbind(res.P, res.D), names = c("Pearson", "Deviance"),main="Figur 15: di
 
 #### Residuals plots
 
-The purpose is to ensure that there are no systematic patterns in the residuals. The plot below shows that the red curves are close to 0 in both plots, but there may be a quadratic pattern. Higher order terms can be added to check if this pattern exists
+The purpose is to determine if there are systematic patterns in the residuals. The plots below show that both pearson residuals plot and deviance residuals plot do not have symmetry pattern. In addition, the red curve captures this non-linear pattern; hence, the model may not capture some non-linear effects.
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE,fig.align="center"}
 par(mfrow=c(1,2))
