@@ -2,8 +2,8 @@
 This project aimed to find the neuronal spike activities of two mice across five sessions and four levels of contrast on both the right and left sides.
 
 ## Exploratory Data Analysis and data preprocessing
-* Observed different trial numbers and neuronal spikes in five sessions, and used two table to present the difference.
-* Utilized average firing rate in session 5 and plot the distribution.
+* Observed different trial numbers and neuronal spikes in five sessions, and used two tables to present the difference.
+* Utilized average firing rate in session 5 and plotted the distribution.
 * Plotted main effect and interaction effect from left contrast levels and right contrast levels across five sessions.
   
 
@@ -18,12 +18,12 @@ This project aimed to find the neuronal spike activities of two mice across five
 
 ## Sensitive analysis
 * ANOVA model:
-  * Utilized Pearson residuals and deviance residuals to determine if model has lack-of-fit issue
+  * Utilized Pearson residuals and deviance residuals to determine if the model has lack-of-fit issue
   * Checked Homogeneity of Variance in five sessions.
   * Checked normality of residuals
 * GLM model:
-  * Utilized Pearson residuals and deviance residuals on Logistic Regression model check if there has Symmetric Pattern in residuals.
-  * Analysize influentail points
+  * Utilized Pearson residuals and deviance residuals on Logistic Regression model to check if there is a symmetric pattern in residuals.
+  * Analyze influential points
   
   
 
