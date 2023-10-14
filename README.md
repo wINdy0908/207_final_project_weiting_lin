@@ -25,5 +25,8 @@ This project aimed to find the neuronal spike activities of two mice across five
   * Utilized Pearson residuals and deviance residuals on Logistic Regression model check if there has Symmetric Pattern in residuals.
   * Analysize influentail points
   
+  
+  
+  //test
 
 
